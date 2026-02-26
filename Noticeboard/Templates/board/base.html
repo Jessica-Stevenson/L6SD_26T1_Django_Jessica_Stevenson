@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mini Project</title>
+
+    <link rel="stylesheet" href="{% static 'board/style.css' %}">
+</head>
+<body>
+
+    <nav>
+        <a href="{% url 'home' %}">Home</a> |
+        <a href="{% url 'about' %}">About</a> |
+        <a href="{% url 'notices' %}">Notices</a>
+    </nav>
+
+    <hr>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>
