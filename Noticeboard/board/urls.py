@@ -1,9 +1,8 @@
-# board/urls.py
 from django.urls import path
 from . import views
 
 urlpatterns = [
     path('', views.home_view, name='home'),
     path('about/', views.about_view, name='about'),
-    path('notices/', views.notices_view, name='notices'),
+    path('notices/', views.notices, name='notices'),
 ]
