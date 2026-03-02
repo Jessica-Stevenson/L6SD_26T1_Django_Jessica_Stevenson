@@ -9,7 +9,7 @@
         <div class="card-body">
             <h4 class="card-title">{{ notice.title }}</h4>
             <p class="card-text">{{ notice.text }}</p>
-            <small class="text-muted">{{ notice.created_at }}</small>
+            <small class="text-muted">Posted by {{ notice.user.username }} on {{ notice.created_at|date:"M d, Y H:i" }}</small>
         </div>
     </div>
 {% empty %}

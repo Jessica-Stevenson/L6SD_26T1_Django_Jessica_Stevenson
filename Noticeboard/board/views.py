@@ -1,35 +1,48 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from .models import Notice
 from .forms import NoticeForm
 
-#Home page view
+#Home Page View
 def home_view(request):
+    #Show latest 10 notices
     notices = Notice.objects.all().order_by('-created_at')[:10]
     return render(request, 'board/home.html', {'notices': notices})
 
-#About page view
+#About Page View
 def about_view(request):
     return render(request, 'board/about.html')
 
-#Notices page view
+#Sign Up View
+def signup_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'registration/signup.html', {'form': form})
+
+#Notices Page View
+@login_required
 def notices(request):
-    """
-    Handles:
-    - Displaying all notices
-    - Creating new notices via form submission
-    """
     if request.method == 'POST':
         form = NoticeForm(request.POST)
         if form.is_valid():
-            form.save()  #Save the new notice to the database
-            return redirect('notices')  #Reload the page to show the new notice
+            notice = form.save(commit=False)
+            notice.user = request.user
+            notice.save()
+            return redirect('notices')
     else:
-        form = NoticeForm()  #Empty form for GET request
+        form = NoticeForm()
 
-    #Fetch all notices from the database, newest first
     all_notices = Notice.objects.all().order_by('-created_at')
 
-    #Render the template with the form and all notices
     return render(request, 'board/notices.html', {
         'form': form,
         'notices': all_notices

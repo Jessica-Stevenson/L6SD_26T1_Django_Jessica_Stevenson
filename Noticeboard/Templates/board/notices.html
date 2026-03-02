@@ -20,11 +20,13 @@
 <h2>All Notices</h2>
 
 {% for notice in notices %}
-    <div class="card mb-3 shadow-sm">
+    <div class="card mb-3">
         <div class="card-body">
-            <h4 class="card-title">{{ notice.title }}</h4>
+            <h5 class="card-title">{{ notice.title }}</h5>
             <p class="card-text">{{ notice.text }}</p>
-            <small class="text-muted">{{ notice.created_at }}</small>
+            <p class="card-subtitle text-muted">
+                Posted by {{ notice.user.username }} on {{ notice.created_at|date:"M d, Y H:i" }}
+            </p>
         </div>
     </div>
 {% empty %}
