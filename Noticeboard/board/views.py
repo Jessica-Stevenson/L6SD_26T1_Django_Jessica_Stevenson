@@ -4,6 +4,32 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .models import Notice
 from .forms import NoticeForm
+from .models import Notice, Profile
+from .forms import NoticeForm, UserUpdateForm, ProfileUpdateForm
+
+@login_required
+def profile_view(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    user_notices = Notice.objects.filter(user=request.user).order_by('-created_at')
+
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('profile')
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=profile)
+
+    return render(request, 'board/profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'notices': user_notices
+    })
 
 #Home Page View
 def home_view(request):

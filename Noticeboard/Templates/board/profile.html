@@ -1,0 +1,48 @@
+{% extends 'board/base.html' %}
+
+{% block content %}
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-header bg-dark text-white">
+        <h4 class="mb-0">Edit Profile</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                {{ user_form.username }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Bio</label>
+                {{ profile_form.bio }}
+            </div>
+
+            <button type="submit" class="btn btn-success">
+                Update Profile
+            </button>
+        </form>
+    </div>
+</div>
+
+<hr>
+
+<h3>My Notices</h3>
+
+{% for notice in notices %}
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">{{ notice.title }}</h4>
+            <p class="card-text">{{ notice.text }}</p>
+            <small class="text-muted">
+                Posted on {{ notice.created_at|date:"M d, Y H:i" }}
+            </small>
+        </div>
+    </div>
+{% empty %}
+    <p>You haven't posted any notices yet.</p>
+{% endfor %}
+
+{% endblock %}
